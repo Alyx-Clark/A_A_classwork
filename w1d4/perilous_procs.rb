@@ -233,9 +233,9 @@ def proc_suffix(sent, hash)
     new_sent
 end
 
-# contains_a = Proc.new { |w| w.include?('a') }
-# three_letters = Proc.new { |w| w.length == 3 }
-# four_letters = Proc.new { |w| w.length == 4 }
+contains_a = Proc.new { |w| w.include?('a') }
+three_letters = Proc.new { |w| w.length == 3 }
+four_letters = Proc.new { |w| w.length == 4 }
 
 # p proc_suffix('dog cat',
 #     contains_a => 'ly',
@@ -258,3 +258,131 @@ end
 #     contains_a => 'ly',
 #     three_letters => 'o'
 # )   # "fooding gladingly rantingly dogo catlyo"
+
+def proctition_platinum(arry, *procs)
+    hash = {}
+    procs.each_index { |i| hash[i+1] = []}
+    arry.each do |ele|
+        procs.each_with_index do |proc, i|
+            if proc.call(ele)
+                hash[i+1] << ele
+                break
+            end
+        end
+    end
+    hash
+end
+
+# is_yelled = Proc.new { |s| s[-1] == '!' }
+# is_upcase = Proc.new { |s| s.upcase == s }
+# contains_a = Proc.new { |s| s.downcase.include?('a') }
+# begins_w = Proc.new { |s| s.downcase[0] == 'w' }
+
+# p proctition_platinum(['WHO', 'what', 'when!', 'WHERE!', 'how', 'WHY'], is_yelled, contains_a)
+# # {1=>["when!", "WHERE!"], 2=>["what"]}
+
+# p proctition_platinum(['WHO', 'what', 'when!', 'WHERE!', 'how', 'WHY'], is_yelled, is_upcase, contains_a)
+# # {1=>["when!", "WHERE!"], 2=>["WHO", "WHY"], 3=>["what"]}
+
+# p proctition_platinum(['WHO', 'what', 'when!', 'WHERE!', 'how', 'WHY'], is_upcase, is_yelled, contains_a)
+# # {1=>["WHO", "WHERE!", "WHY"], 2=>["when!"], 3=>["what"]}
+
+# p proctition_platinum(['WHO', 'what', 'when!', 'WHERE!', 'how', 'WHY'], begins_w, is_upcase, is_yelled, contains_a)
+# # {1=>["WHO", "what", "when!", "WHERE!", "WHY"], 2=>[], 3=>[], 4=>[]}
+
+def procipher(sent, hash)
+    words = sent.split(" ")
+    new_words = words.map do |word|
+        new_word = word
+        hash.each do |k,v|
+            if k.call(word)
+                new_word = v.call(new_word)
+            end
+        end
+        new_word
+    end
+    new_words.join(" ")
+end
+
+# is_yelled = Proc.new { |s| s[-1] == '!' }
+# is_upcase = Proc.new { |s| s.upcase == s }
+# contains_a = Proc.new { |s| s.downcase.include?('a') }
+# make_question = Proc.new { |s| s + '???' }
+# reverse = Proc.new { |s| s.reverse }
+# add_smile = Proc.new { |s| s + ':)' }
+
+# p procipher('he said what!',
+#     is_yelled => make_question,
+#     contains_a => reverse
+# ) # "he dias ???!tahw"
+
+# p procipher('he said what!',
+#     contains_a => reverse,
+#     is_yelled => make_question
+# ) # "he dias !tahw???"
+
+# p procipher('he said what!',
+#     contains_a => reverse,
+#     is_yelled => add_smile
+# ) # "he dias !tahw:)"
+
+# p procipher('stop that taxi now',
+#     is_upcase => add_smile,
+#     is_yelled => reverse,
+#     contains_a => make_question
+# ) # "stop that??? taxi??? now"
+
+# p procipher('STOP that taxi now!',
+#     is_upcase => add_smile,
+#     is_yelled => reverse,
+#     contains_a => make_question
+# ) # "STOP:) that??? taxi??? !won"
+
+def picky_procipher(sent, hash)
+    words = sent.split(" ")
+    new_words = words.map do |word|
+        new_word = word
+        hash.each do |check, change|
+            if check.call(word)
+                new_word = change.call(new_word)
+                break
+            end
+        end
+        new_word
+    end
+    new_words.join(" ")
+end
+
+# is_yelled = Proc.new { |s| s[-1] == '!' }
+# is_upcase = Proc.new { |s| s.upcase == s }
+# contains_a = Proc.new { |s| s.downcase.include?('a') }
+# make_question = Proc.new { |s| s + '???' }
+# reverse = Proc.new { |s| s.reverse }
+# add_smile = Proc.new { |s| s + ':)' }
+
+# p picky_procipher('he said what!',
+#     is_yelled => make_question,
+#     contains_a => reverse
+# ) # "he dias what!???"
+
+# p picky_procipher('he said what!',
+#     contains_a => reverse,
+#     is_yelled => make_question
+# ) # "he dias !tahw"
+
+# p picky_procipher('he said what!',
+#     contains_a => reverse,
+#     is_yelled => add_smile
+# ) # "he dias !tahw"
+
+# p picky_procipher('stop that taxi now',
+#     is_upcase => add_smile,
+#     is_yelled => reverse,
+#     contains_a => make_question
+# ) # "stop that??? taxi??? now"
+
+# p picky_procipher('STOP that taxi!',
+#     is_upcase => add_smile,
+#     is_yelled => reverse,
+#     contains_a => make_question
+# ) # "STOP:) that??? !ixat"
