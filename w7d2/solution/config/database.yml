@@ -87,3 +87,9 @@ production:
   host: db
   #  Here we have removed the defaults in order to host
   # this application using Docker and the Heroku Container Registry
+
+test:
+  adapter: postgresql
+  database: music_db_test
+  pool: 5
+  timeout: 5000
