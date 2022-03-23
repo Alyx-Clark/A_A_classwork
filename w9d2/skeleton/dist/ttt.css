@@ -1,0 +1,19 @@
+.ttt-board{
+	display: flex;
+	width: 600px;
+	flex-wrap: wrap;
+	list-style: none;
+}
+
+.ttt-board > li {
+	width:200px;
+	height:200px;
+	box-sizing: border-box;
+	border: 2px solid black;
+	background: gray;
+}
+
+.ttt-board > li:hover{
+	background: yellow;
+}
+

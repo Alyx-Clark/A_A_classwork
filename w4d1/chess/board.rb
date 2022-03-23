@@ -1,22 +1,72 @@
-require_relative "piece"
+require_relative 'relatives'
+
 class Board
     def initialize
-        @rows = Array.new(8) { Array.new(8, nil) }
-        set_up_board
-    end
+        @rows = Array.new(8) { Array.new(8) { NullPiece.instance }}
 
-
-
-    def set_up_board
         [0, 1, 6, 7].each do |row|
-            (0..7).each do |col|
-                self[[row, col]] = Piece.new("W", self, [row, col])
+            case row
+            when 0
+                (0..7).each do |col|
+                    pos = [row, col]
+                    case col
+                    when 0 # put a rook
+                        self[pos] = Rook.new(:black, self, pos)
+                    when 7 # put a rook
+                        self[pos] = Rook.new(:black, self, pos)
+                    when 1 # put a knight
+                        self[pos] = Knight.new(:black, self, pos)
+                    when 6 # put a knight
+                        self[pos] = Knight.new(:black, self, pos)
+                    when 2 # put a bishop
+                        self[pos] = Bishop.new(:black, self, pos)
+                    when 5 # put a bishop
+                        self[pos] = Bishop.new(:black, self, pos)
+                    when 3 # put a queen
+                        self[pos] = Queen.new(:black, self, pos)
+                    when 4 # put a king
+                        self[pos] = King.new(:black, self, pos)
+                    end
+                end
+            when 7
+                (0..7).each do |col|
+                    pos = [row, col]
+                    case col
+                    when 0 # put a rook
+                        self[pos] = Rook.new(:white, self, pos)
+                    when 7 # put a rook
+                        self[pos] = Rook.new(:white, self, pos)
+                    when 1 # put a knight
+                        self[pos] = Knight.new(:white, self, pos)
+                    when 6 # put a knight
+                        self[pos] = Knight.new(:white, self, pos)
+                    when 2 # put a bishop
+                        self[pos] = Bishop.new(:white, self, pos)
+                    when 5 # put a bishop
+                        self[pos] = Bishop.new(:white, self, pos)
+                    when 3 # put a queen
+                        self[pos] = Queen.new(:white, self, pos)
+                    when 4 # put a king
+                        self[pos] = King.new(:white, self, pos)
+                    end
+                end
+            when 1
+                (0..7).each do |col|
+                    pos = [1, col]
+                    self[pos] = Pawn.new(:black, self, pos)
+                end
+            when 6
+                (0..7).each do |col|
+                    pos = [6, col]
+                    self[pos] = Pawn.new(:white, self, pos)
+                end
             end
         end
     end
 
     def [](pos)
-        @rows[pos[0]][pos[1]]
+        row, col = pos
+        @rows[row][col]
     end
 
     def []=(pos, value)
@@ -25,20 +75,20 @@ class Board
     end
 
     def move_piece(start_pos, end_pos)
-        raise if self[start_pos] == nil
+        raise if self[start_pos].is_a? (NullPiece)
         raise if !valid_pos?(end_pos)
+        raise if !self[start_pos].moves.include?(end_pos)
 
         current_piece = self[start_pos]
-        self[start_pos] = nil
+        self[start_pos] = NullPiece.instance
         self[end_pos] = current_piece
         current_piece.pos = end_pos
         
     end 
 
     def valid_pos?(pos)
-        return true if self[pos] == nil && 
-            pos.all? { |n| n < 8 && n > -1 }
-        false
+        # valid pos if the pos is a null piece & in bound
+        pos.all? { |n| n < 8 && n > -1 }
     end
 
     private
