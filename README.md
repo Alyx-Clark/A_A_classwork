@@ -1,2 +1,2 @@
 # A_A_classwork
-Most of my work from App Academy
+Most of my daily work from my time at App Academy
